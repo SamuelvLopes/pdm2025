@@ -33,6 +33,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.text.input.KeyboardType
+import com.weatherapp.ui.components.DataField
+import com.weatherapp.ui.components.PasswordField
 
 
 class LoginActivity : ComponentActivity() {
@@ -66,28 +69,27 @@ fun LoginPage(modifier: Modifier = Modifier) {
         horizontalAlignment = CenterHorizontally,
     ) {
         Text(
-            text = "Bem-vindo/a!",
-            fontSize = 24.sp
+            text = "Bem-vindo/a!", fontSize = 24.sp
         )
 
         Spacer(modifier = modifier.size(24.dp))
 
-        OutlinedTextField(
+        DataField(
+            label = "Digite seu e-mail",
             value = email,
-            label = { Text(text = "Digite seu e-mail") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
-            onValueChange = { email = it }
+            onValueChange = { email = it },
+            modifier = modifier.fillMaxWidth(0.9f),
+            keyboardType = KeyboardType.Email
+        )
+
+        PasswordField(
+            label = "Digite sua senha",
+            value = password,
+            onValueChange = { password = it },
+            modifier = modifier.fillMaxWidth(0.9f)
         )
 
         Spacer(modifier = modifier.size(24.dp))
-
-        OutlinedTextField(
-            value = password,
-            label = { Text(text = "Digite sua senha") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
-            onValueChange = { password = it },
-            visualTransformation = PasswordVisualTransformation()
-        )
 
         Row(modifier = modifier) {
             Button(
@@ -98,25 +100,23 @@ fun LoginPage(modifier: Modifier = Modifier) {
                             FLAG_ACTIVITY_SINGLE_TOP
                         )
                     )
-                },
-                enabled = email.isNotEmpty() && password.isNotEmpty()
+                }, enabled = email.isNotEmpty() && password.isNotEmpty()
             ) {
                 Text("Login")
             }
+
+            Spacer(modifier = modifier.size(12.dp))
+
             Button(
-                onClick = { email = ""; password = "" }
-            ) {
+                onClick = { email = ""; password = "" }) {
                 Text("Limpar")
             }
         }
 
-        Spacer(modifier = Modifier.size(16.dp)) // dá um espaço entre as linhas
-
         Button(
             onClick = {
                 context.startActivity(Intent(context, RegisterActivity::class.java))
-            }
-        ) {
+            }) {
             Text("Registrar")
         }
     }

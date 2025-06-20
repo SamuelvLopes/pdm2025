@@ -13,10 +13,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.weatherapp.ui.components.DataField
+import com.weatherapp.ui.components.PasswordField
 import com.weatherapp.ui.theme.WeatherAppTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -52,39 +55,38 @@ fun RegisterPage(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        OutlinedTextField(
+        DataField(
+            label = "Nome",
             value = name,
             onValueChange = { name = it },
-            label = { Text("Nome") },
             modifier = Modifier.fillMaxWidth(0.9f)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        DataField(
+            label = "E-mail",
             value = email,
             onValueChange = { email = it },
-            label = { Text("E-mail") },
-            modifier = Modifier.fillMaxWidth(0.9f)
+            modifier = Modifier.fillMaxWidth(0.9f),
+            keyboardType = KeyboardType.Email
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        PasswordField(
+            label = "Senha",
             value = password,
             onValueChange = { password = it },
-            label = { Text("Senha") },
-            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.9f)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        PasswordField(
+            label = "Confirme a Senha",
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirmar senha") },
-            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.9f)
         )
 
