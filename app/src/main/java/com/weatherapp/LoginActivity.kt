@@ -55,6 +55,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     val activity = LocalContext.current as? Activity
+    val context = LocalContext.current
 
 
     Column(
@@ -98,9 +99,8 @@ fun LoginPage(modifier: Modifier = Modifier) {
                         )
                     )
                 },
-                enabled = email.isNotEmpty() && password.isNotEmpty(),
-
-                ) {
+                enabled = email.isNotEmpty() && password.isNotEmpty()
+            ) {
                 Text("Login")
             }
             Button(
@@ -108,6 +108,16 @@ fun LoginPage(modifier: Modifier = Modifier) {
             ) {
                 Text("Limpar")
             }
+        }
+
+        Spacer(modifier = Modifier.size(16.dp)) // dá um espaço entre as linhas
+
+        Button(
+            onClick = {
+                context.startActivity(Intent(context, RegisterActivity::class.java))
+            }
+        ) {
+            Text("Registrar")
         }
     }
 }
