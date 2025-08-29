@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.weatherapp.db.fb.FBDatabase
+import com.weatherapp.db.fb.toFBUser
+import com.weatherapp.model.User
 import com.weatherapp.ui.components.DataField
 import com.weatherapp.ui.components.PasswordField
 import com.weatherapp.ui.theme.WeatherAppTheme
@@ -98,7 +101,11 @@ fun RegisterPage(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
                     if (password.length < 6) {
-                        Toast.makeText(activity, "A senha deve ter pelo menos 6 caracteres", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            activity,
+                            "A senha deve ter pelo menos 6 caracteres",
+                            Toast.LENGTH_LONG
+                        ).show()
                         return@Button
                     }
 
@@ -106,9 +113,14 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                         Firebase.auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(act) { task ->
                                 if (task.isSuccessful) {
+                                    FBDatabase().register(User(name, email).toFBUser())
                                     Toast.makeText(act, "Registro OK!", Toast.LENGTH_LONG).show()
                                 } else {
-                                    Toast.makeText(act, task.exception?.message ?: "Registro FALHOU!", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        act,
+                                        task.exception?.message ?: "Registro FALHOU!",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }
                     }
