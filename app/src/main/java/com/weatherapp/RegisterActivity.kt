@@ -18,6 +18,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.weatherapp.ui.components.DataField
 import com.weatherapp.ui.components.PasswordField
 import com.weatherapp.ui.theme.WeatherAppTheme
@@ -95,17 +97,26 @@ fun RegisterPage(modifier: Modifier = Modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(
                 onClick = {
-                    if (name.isNotBlank() && email.isNotBlank() &&
-                        password.isNotBlank() && password == confirmPassword
-                    ) {
-                        Toast.makeText(activity, "Registro realizado com sucesso!", Toast.LENGTH_LONG).show()
-                        activity?.finish()
-                    } else {
-                        Toast.makeText(activity, "Verifique os dados!", Toast.LENGTH_LONG).show()
+                    if (password.length < 6) {
+                        Toast.makeText(activity, "A senha deve ter pelo menos 6 caracteres", Toast.LENGTH_LONG).show()
+                        return@Button
+                    }
+
+                    activity?.let { act ->
+                        Firebase.auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(act) { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(act, "Registro OK!", Toast.LENGTH_LONG).show()
+                                    act.finish()
+                                } else {
+                                    Toast.makeText(act, task.exception?.message ?: "Registro FALHOU!", Toast.LENGTH_LONG).show()
+                                }
+                            }
                     }
                 },
                 enabled = name.isNotBlank() && email.isNotBlank() &&
-                        password.isNotBlank() && confirmPassword.isNotBlank()
+                        password.isNotBlank() && confirmPassword.isNotBlank() &&
+                        password == confirmPassword
             ) {
                 Text("Registrar")
             }
