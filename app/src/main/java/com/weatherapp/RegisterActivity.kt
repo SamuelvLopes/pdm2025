@@ -107,7 +107,6 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                             .addOnCompleteListener(act) { task ->
                                 if (task.isSuccessful) {
                                     Toast.makeText(act, "Registro OK!", Toast.LENGTH_LONG).show()
-                                    act.finish()
                                 } else {
                                     Toast.makeText(act, task.exception?.message ?: "Registro FALHOU!", Toast.LENGTH_LONG).show()
                                 }
