@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -30,7 +29,7 @@ import com.weatherapp.ui.components.BottomNavBar
 import com.weatherapp.ui.components.CityDialog
 import com.weatherapp.ui.nav.BottomNavItem
 import com.weatherapp.ui.nav.MainNavHost
-import com.weatherapp.ui.pages.HomePage
+
 import com.weatherapp.ui.theme.WeatherAppTheme
 
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -40,6 +39,7 @@ import com.weatherapp.api.WeatherService
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.model.MainViewModel.MainViewModelFactory
 import com.weatherapp.ui.nav.Route
+import com.weatherapp.ui.pages.HomePage
 
 
 class MainActivity : ComponentActivity() {
@@ -131,6 +131,6 @@ private fun NavDestination?.hasRoute(string: String) {}
 @Composable
 fun HomePagePreview() {
     WeatherAppTheme {
-        HomePage(viewModel = viewModel())
+        HomePage(Modifier = Modifier, viewModel = viewModel())
     }
 }
