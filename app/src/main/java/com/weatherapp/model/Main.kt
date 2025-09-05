@@ -5,14 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng
+import com.weatherapp.api.WeatherService
 import com.weatherapp.db.fb.FBCity
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.db.fb.FBUser
 import com.weatherapp.db.fb.toFBCity
 
 
-class MainViewModel(private val db: FBDatabase) : ViewModel(),
-    FBDatabase.Listener {
+class MainViewModel (private val db: FBDatabase,
+private val service : WeatherService): ViewModel(), FBDatabase.Listener {
+
     private val _cities = mutableStateListOf<City>()
     val cities
         get() = _cities.toList()
@@ -51,18 +53,34 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(),
     override fun onCityRemoved(city: FBCity) {
         _cities.remove(city.toCity())
     }
-}
 
-private fun getCities() = List(20) { i ->
-    City(name = "Cidade $i", weather = "Carregando clima...")
-}
+    private fun getCities() = List(20) { i ->
+        City(name = "Cidade $i", weather = "Carregando clima...")
+    }
 
-class MainViewModelFactory(private val db: FBDatabase) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(db) as T
+    fun add(name: String) {
+        service.getLocation(name) { lat, lng ->
+            if (lat != null && lng != null) {
+                db.add(City(name=name, location=LatLng(lat, lng)).toFBCity())
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+    fun add(location: LatLng) {
+        service.getName(location.latitude, location.longitude) { name ->
+            if (name != null) {
+                db.add(City(name = name, location = location).toFBCity())
+            }
+        }
+    }
+
+
+    class MainViewModelFactory(private val db: FBDatabase, private val service : WeatherService) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                return MainViewModel(db, service) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
