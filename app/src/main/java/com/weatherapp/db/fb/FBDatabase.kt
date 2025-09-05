@@ -83,4 +83,14 @@ class FBDatabase {
             .document(city.name!!).delete()
 
     }
+
+    fun update(city: FBCity) {
+        if (auth.currentUser == null) throw RuntimeException("Not logged in!")
+        val uid = auth.currentUser!!.uid
+        val changes = mapOf("lat" to city.lat,"lng" to city.lng,
+            "monitored" to city.monitored )
+        db.collection("users").document(uid)
+            .collection("cities").document(city.name!!).update(changes)
+    }
+
 }

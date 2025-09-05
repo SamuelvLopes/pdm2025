@@ -2,6 +2,7 @@ package com.weatherapp.ui.pages
 
 import ForecastItem
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,10 +27,14 @@ import com.weatherapp.R
 import com.weatherapp.model.MainViewModel
 
 import coil.compose.AsyncImage
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 
 
 @Composable
 fun HomePage(Modifier: Modifier.Companion, viewModel: MainViewModel) {
+
     Column {
         if (viewModel.city == null) {
             Column( modifier = Modifier.fillMaxSize()
@@ -43,9 +48,14 @@ fun HomePage(Modifier: Modifier.Companion, viewModel: MainViewModel) {
                 )
             }
         } else {
+            val icon = if (viewModel.city?.isMonitored == true) {
+                Icons.Filled.Notifications
+            } else {
+                Icons.Outlined.Notifications
+            }
             Row {
 
-                    AsyncImage( // Substitui o Icon
+                    AsyncImage(
                         model = viewModel.city?.weather?.imgUrl,
                         modifier = Modifier.size(100.dp),
                         error = painterResource(id = R.drawable.loading),
@@ -54,8 +64,19 @@ fun HomePage(Modifier: Modifier.Companion, viewModel: MainViewModel) {
 
                 Column {
                     Spacer(modifier = Modifier.size(12.dp))
-                    Text( text = viewModel.city?.name ?: "Selecione uma cidade...",
-                        fontSize = 28.sp )
+                    Row(){
+                        Text( text = viewModel.city?.name ?: "Selecione uma cidade...",
+                            fontSize = 28.sp )
+                        Icon(
+                            imageVector = icon, contentDescription = "Monitorada?",
+                            modifier = Modifier.size(32.dp).clickable(enabled=viewModel.city != null){
+                                viewModel.update(
+                                    viewModel.city!!.copy(
+                                        isMonitored = !viewModel.city!!.isMonitored))
+                            }
+                        )
+
+                    }
                     Spacer(modifier = Modifier.size(12.dp))
                     Text( text = viewModel.city?.weather?.desc ?: "...",
                         fontSize = 22.sp )

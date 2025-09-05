@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -59,7 +61,6 @@ fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
         }
     }
 }
-
 @Composable
 fun CityItem(
     city: City,
@@ -74,7 +75,6 @@ fun CityItem(
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         AsyncImage(
             model = city.weather?.imgUrl,
             modifier = Modifier.size(75.dp),
@@ -94,9 +94,21 @@ fun CityItem(
                 fontSize = 16.sp
             )
         }
+
+        // Ícone de monitoramento (somente visual)
+        Icon(
+            imageVector = if (city.isMonitored)
+                Icons.Filled.Notifications
+            else
+                Icons.Outlined.Notifications,
+            contentDescription = "Monitorada?",
+            modifier = Modifier.size(28.dp)
+        )
+
+        Spacer(modifier = Modifier.size(8.dp))
+
         IconButton(onClick = onClose) {
             Icon(Icons.Filled.Close, contentDescription = "Close")
         }
     }
 }
-
