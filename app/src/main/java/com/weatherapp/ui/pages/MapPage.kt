@@ -11,6 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.scale
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -61,38 +64,22 @@ fun MapPage(viewModel: MainViewModel) {
                         viewModel.loadWeather(it.name)
                     }
                 }
+                LaunchedEffect(it.weather) {
+                    if (it.weather != null && it.weather!!.bitmap == null) {
+                        viewModel.loadBitmap(it.name)
+                    }
+                }
+                val image = it.weather?.bitmap ?:
+                getDrawable(context, R.drawable.loading)!!
+                    .toBitmap()
+                val marker = BitmapDescriptorFactory
+                    .fromBitmap(image.scale(120,120))
                 Marker( state = MarkerState(position = it.location!!),
                     title = it.name,
-                    snippet = it.weather?.desc?:"Carregando...")
+                    icon = marker,
+                    snippet = it.weather?.desc?:"Carregando..."
+                )
             }
         }
-
-        Marker(
-            state = MarkerState(position = recife),
-            title = "Recife",
-            snippet = "Marcador em Recife",
-            icon = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_RED
-            )
-        )
-        Marker(
-            state = MarkerState(position = caruaru),
-            title = "Caruaru",
-            snippet = "Marcador em Caruaru",
-            icon = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_BLUE
-            )
-        )
-        Marker(
-            state = MarkerState(position = joaopessoa),
-            title = "João Pessoa",
-            snippet = "Marcador em João Pessoa",
-            icon = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_GREEN
-            )
-        )
-
-
     }
-
 }

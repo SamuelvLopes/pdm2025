@@ -128,4 +128,19 @@ class MainViewModel(
             city = if (city?.name == name) newCity else city
         }
     }
+
+    fun loadBitmap(name: String)
+    {
+        val city = _cities[name]
+        service.getBitmap(city?.weather!!.imgUrl) { bitmap ->
+            val newCity = city.copy(
+                weather = city.weather?.copy(
+                    bitmap = bitmap
+                )
+            )
+            _cities.remove(name)
+            _cities[name] = newCity
+        }
+    }
+
 }
