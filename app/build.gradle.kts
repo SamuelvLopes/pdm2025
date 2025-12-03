@@ -84,6 +84,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // Google maps
     implementation("com.google.android.gms:play-services-maps:19.2.0")
@@ -96,6 +98,14 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.5.0") // coil
     implementation("com.squareup.picasso:picasso:2.8") // Picasso
+
+    // CameraX + MLKit + QR
+    implementation("androidx.camera:camera-camera2:1.5.2")
+    implementation("androidx.camera:camera-lifecycle:1.5.2")
+    implementation("androidx.camera:camera-view:1.5.2")
+    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1")
+    implementation("com.google.zxing:core:3.5.3")
+    implementation("com.google.guava:guava:32.1.3-android")
 
     val room_version = "2.7.2"
     implementation("androidx.room:room-runtime:$room_version")

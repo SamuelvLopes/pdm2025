@@ -1,10 +1,9 @@
 package com.weatherapp.db.fb
 
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.firestore
 
 class FBDatabase {
     interface Listener {
@@ -15,8 +14,8 @@ class FBDatabase {
         fun onCityRemoved(city: FBCity)
     }
 
-    private val auth = Firebase.auth
-    private val db = Firebase.firestore
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     private var citiesListReg: ListenerRegistration? = null
     private var listener: Listener? = null
 
