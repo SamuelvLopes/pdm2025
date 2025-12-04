@@ -126,6 +126,16 @@ object MovementRepository {
             .await()
     }
 
+    suspend fun sendPairInvite(pairId: String, fromUid: String) {
+        val inviteRef = db.collection("pairs").document(pairId).collection("invites").document()
+        val data = mapOf(
+            "fromUid" to fromUid,
+            "createdAt" to System.currentTimeMillis(),
+            "status" to "pending"
+        )
+        inviteRef.set(data).await()
+    }
+
     suspend fun countUsersInCity(cityName: String): Int {
         val snapshot = db.collection("users")
             .whereEqualTo("lastCity", cityName)
