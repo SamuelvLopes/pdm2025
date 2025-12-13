@@ -40,6 +40,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +59,11 @@ fun ProfileDashboardScreen(
     onOpenIntegrations: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var isSeniorMode by rememberSaveable { mutableStateOf(true) }
+    var statusMessage by rememberSaveable {
+        mutableStateOf("Modo idoso ativo: conteúdos e alertas estão adaptados.")
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -89,9 +98,15 @@ fun ProfileDashboardScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Modo idoso", color = Color.White)
                     Switch(
-                        checked = true,
-                        onCheckedChange = {},
-                        enabled = false,
+                        checked = isSeniorMode,
+                        onCheckedChange = {
+                            isSeniorMode = it
+                            statusMessage = if (it) {
+                                "Modo idoso ativo: você receberá lembretes suaves."
+                            } else {
+                                "Modo padrão ativado: notificações mais energéticas liberadas."
+                            }
+                        },
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = Color.White.copy(alpha = 0.4f),
                             checkedThumbColor = Color.White
@@ -144,6 +159,13 @@ fun ProfileDashboardScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
         }
+
+        Text(
+            text = statusMessage,
+            color = Color.Gray,
+            fontSize = 13.sp,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
     }
 }
 
