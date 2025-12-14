@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.util.Consumer
@@ -98,7 +101,10 @@ class MainActivity : ComponentActivity() {
                     ActivityResultContracts.RequestPermission(), onResult = {})
 
 
-            WeatherAppTheme {
+            val systemDarkTheme = isSystemInDarkTheme()
+            var isDarkTheme by remember { mutableStateOf(systemDarkTheme) }
+
+            WeatherAppTheme(darkTheme = isDarkTheme) {
                 if (showDialog) CityDialog(
                     onDismiss = { showDialog = false },
                     onConfirm = { city ->
@@ -115,7 +121,13 @@ class MainActivity : ComponentActivity() {
                             },
 
                             actions = {
-
+                                IconButton(onClick = { isDarkTheme = !isDarkTheme }) {
+                                    val isCurrentlyDark = isDarkTheme
+                                    Icon(
+                                        imageVector = if (isCurrentlyDark) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                                        contentDescription = if (isCurrentlyDark) "Ativar modo claro" else "Ativar modo escuro"
+                                    )
+                                }
                                 IconButton(onClick = {
                                     Firebase.auth.signOut()
                                 }) {
