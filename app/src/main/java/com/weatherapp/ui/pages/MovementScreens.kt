@@ -298,6 +298,7 @@ fun HomeScreen(
     var profile by remember { mutableStateOf<UserProfile?>(null) }
     var partnerName by remember { mutableStateOf<String?>(null) }
     var isListening by remember { mutableStateOf(false) }
+    var isInviteSending by remember { mutableStateOf(false) }
     var audioPermissionGranted by remember {
         mutableStateOf(hasPermission(context, Manifest.permission.RECORD_AUDIO))
     }
@@ -488,6 +489,7 @@ fun HomeScreen(
     val pointsTotal = mergedProfile?.pointsTotal ?: cached.pointsTotal
     val streak = mergedProfile?.streakCount ?: cached.streakCount
     val lastWorkoutAt = mergedProfile?.lastWorkoutAt ?: cached.lastWorkoutAt
+    val pairId = mergedProfile?.pairId
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -649,6 +651,44 @@ fun HomeScreen(
                             Icon(Icons.Filled.CameraAlt, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Escanear", color = Color(0xFF8A46FF))
+                        }
+                    }
+                    if (partnerName != null && pairId != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                val uid = user?.uid ?: return@Button
+                                if (isInviteSending) return@Button
+                                isInviteSending = true
+                                scope.launch {
+                                    try {
+                                        MovementRepository.sendPairInvite(pairId, uid)
+                                        Toast.makeText(
+                                            context,
+                                            "Convite enviado!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } catch (_: Exception) {
+                                        Toast.makeText(
+                                            context,
+                                            "Falha ao enviar convite.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } finally {
+                                        isInviteSending = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(18.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            enabled = !isInviteSending
+                        ) {
+                            Text(
+                                text = if (isInviteSending) "Enviando..." else "Convidar para treinar juntos",
+                                color = Color(0xFF8A46FF),
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
                 }
